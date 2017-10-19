@@ -18,98 +18,130 @@
 window.findNRooksSolution = function(n) {
   var board = new Board({'n': n});
   
-  for (var row = 0; row < n; row++) {
-    for (var col = 0; col < n; col++) {
-      if (!board.get(row)[col]) {
-        board.togglePiece(row, col);
-        if (board.hasAnyRooksConflicts()) {
-          board.togglePiece(row, col);
-        }
-      }
-    }
+  
+  for ( var index = 0; index < n; index++) {
+    board.togglePiece(index, index);
   }
+
+  // for (var row = 0; row < n; row++) {
+  //   for (var col = 0; col < n; col++) {
+  //     if (!board.get(row)[col]) {
+  //       board.togglePiece(row, col);
+  //       if (board.hasAnyRooksConflicts()) {
+  //         board.togglePiece(row, col);
+  //       }
+  //     }
+  //   }
+  // }
   var solution = board.rows(); //fixme
   
-  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
+// window.countNRooksSolutions = function(n) {
+
+//   var board = new Board({'n': n});
+
+//   var copyBoard = function (board) {
+//     var newBoard = new Board( {'n': board.get('n')} );
+//     var tempMatrix = board.rows().slice();
+//     for (var row = 0; row < tempMatrix.length; row++) {
+//       for ( var col = 0; col < tempMatrix[row].length; col++) {
+//         if (tempMatrix[row][col]) {
+//           newBoard.togglePiece(row, col);
+//         }
+//       }
+//     }
+//     return newBoard;
+//   };
+  
+//   var placeRooks = function(board, row) {
+//     var solCounter = 0;
+//     board.children = [];
+//     for (var col = 0; col < n; col++) {
+//       // var boardCopy = Object.assign(board);
+//       var boardCopy = copyBoard(board);
+//       // boardCopy.rows = board.rows().slice();
+//       boardCopy.togglePiece(row, col);
+//       if (boardCopy.hasAnyRooksConflicts()) {
+//         boardCopy.togglePiece(row, col);
+//       } else {
+
+//         board.children.push(boardCopy);
+//       }
+//     }
+    
+//     if (row === board.get('n') - 2) {
+//       return board.children.length;
+//     } else {
+//       var sumChildren = 0;
+//       for (var i = 0; i < board.children.length; i++) {
+//         sumChildren += placeRooks(board.children[i], row + 1);
+//       }
+//       return sumChildren;
+//     }
+
+//     /////////////////////////////////////////////////change later
+//   };
+  
+//   if (n === 1 || n === 0) {
+//     return 1;
+//   }
+//   if (n === 2) {
+//     return 2;
+//   }
+//   var solArr = []; 
+//   var numSol = 0; 
+//   for ( var i = 0; i < n; i++ ) {
+//     solArr.push(new Board({'n': n}));
+//     solArr[i].togglePiece(0, i);
+//     numSol += placeRooks(solArr[i], 1);
+//   }
+  
+  
+  
+//   // var solutionCount = undefined; //fixme
+
+//   console.log('Number of solutions for ' + n + ' rooks:', numSol);
+//   return numSol;
+// };
+
 window.countNRooksSolutions = function(n) {
+  TreePath = function(path) {
+    this.path = path || [];
+    this.children = [];
+  };
+  var testCol = function(path, col) {
+    for (var i = 0; i < path.length; i++) {
+      if (path[i][1] === col) { return true; }
+    }
+    return false;
+  };
 
-  var board = new Board({'n': n});
-
-  var copyBoard = function (board) {
-    var newBoard = new Board( {'n': board.get('n')} );
-    var tempMatrix = board.rows().slice();
-    console.log(JSON.stringify(tempMatrix));
-    for (var row = 0; row < tempMatrix.length; row++) {
-      for ( var col = 0; col < tempMatrix[row].length; col++) {
-        if (tempMatrix[row][col]) {
-          newBoard.togglePiece(row, col);
+  var firstPath = new TreePath();
+  var recursive = function(row, treeNode) {
+    var sumSolutions = 0;
+    for (var col = 0; col < n; col++) {
+      if (!testCol(treeNode.path, col)) {
+        newTree = new TreePath(treeNode.path.slice());
+        newTree.path.push([row, col]);
+        if (newTree.path.length === n) {
+          return 1;
+        } else {
+          sumSolutions += recursive(row + 1, newTree);
         }
       }
     }
-    return newBoard;
+    return sumSolutions;
   };
-  
-  var placeRooks = function(board, row) {
-    var solCounter = 0;
-    board.children = [];
-    for (var col = 0; col < n; col++) {
-      // var boardCopy = Object.assign(board);
-      var boardCopy = copyBoard(board);
-      // boardCopy.rows = board.rows().slice();
-      boardCopy.togglePiece(row, col);
-      if (boardCopy.hasAnyRooksConflicts()) {
-        boardCopy.togglePiece(row, col);
-      } else {
-        // console.log(boardCopy.rows());
-        board.children.push(boardCopy);
-      }
-      // console.log('boardCopy', JSON.stringify(boardCopy.rows()));
-    }
-    console.log('boardChildren', board.children);
-    
-    if (row === board.get('n') - 2) {
-      return board.children.length;
-    } else {
-      var sumChildren = 0;
-      for (var i = 0; i < board.children.length; i++) {
-        sumChildren += placeRooks(board.children[i], row + 1);
-      }
-      return sumChildren;
-    }
-
-    /////////////////////////////////////////////////change later
-  };
-  
-  if (n === 1 || n === 0) {
-    return 1;
-  }
-  if (n === 2) {
-    return 2;
-  }
-  var solArr = []; 
-  var numSol = 0; 
-  for ( var i = 0; i < n; i++ ) {
-    solArr.push(new Board({'n': n}));
-    solArr[i].togglePiece(0, i);
-    numSol += placeRooks(solArr[i], 1);
-  }
-  
-  
-  
-  // var solutionCount = undefined; //fixme
-
-  console.log('Number of solutions for ' + n + ' rooks:', numSol);
-  return numSol;
+  return recursive(0, firstPath);
 };
 
 var copyBoard = function (board, n) {
   var newBoard = new Board({'n': n});
   var tempMatrix = board.rows().slice();
-  console.log(JSON.stringify(tempMatrix));
   for (var row = 0; row < tempMatrix.length; row++) {
     for ( var col = 0; col < tempMatrix[row].length; col++) {
       // debugger;
@@ -152,7 +184,7 @@ window.findNQueensSolution = function(n) {
     if (sumSolution === n) {
       return solution;
     }
-    // console.log(JSON.stringify(solution));
+
     if (start[1] >= n - 1) {
       start[0] += 1;
       start[1] = 0;
@@ -161,7 +193,7 @@ window.findNQueensSolution = function(n) {
     }
   } //fixme
   
-  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
 
@@ -175,7 +207,6 @@ window.countNQueensSolutions = function(n) {
   var copyBoard = function (board) {
     var newBoard = new Board( {'n': board.get('n')} );
     var tempMatrix = board.rows().slice();
-    // console.log(JSON.stringify(tempMatrix));
     for (var row = 0; row < tempMatrix.length; row++) {
       for ( var col = 0; col < tempMatrix[row].length; col++) {
         if (tempMatrix[row][col]) {
