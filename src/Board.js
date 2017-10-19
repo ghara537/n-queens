@@ -80,15 +80,18 @@
     // test if a specific row on this board contains a conflict
     //Does it check if there are two?
     hasRowConflictAt: function(rowIndex) {
+      var count = 0;
       for (var colIndex = 0; colIndex < this.get('n'); colIndex++) {
         //console.log('test for Row:', this.get(rowIndex));
-         if (this.get(rowIndex)[colIndex] === 1){
-          for (var collisionIndex = colIndex+1; collisionIndex < this.get('n'); collisionIndex++){
-            if (this.get(rowIndex)[collisionIndex] === 1){
-              return true;
-            }
-          }
-         }
+        count += this.get(rowIndex)[colIndex];
+        if (count === 2) { return true; }
+         // if (this.get(rowIndex)[colIndex] === 1){
+         //  for (var collisionIndex = colIndex+1; collisionIndex < this.get('n'); collisionIndex++){
+         //    if (this.get(rowIndex)[collisionIndex] === 1){
+         //      return true;
+         //    }
+         //  }
+         // }
       }
       return false; // fixme
     },
@@ -124,15 +127,18 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
+      var count = 0;
       for (var rowIndex = 0; rowIndex < this.get('n'); rowIndex++) {
         //console.log('test for Row:', this.get(rowIndex));
-         if (this.get(rowIndex)[colIndex] === 1){
-          for (var collisionIndex = rowIndex+1; collisionIndex < this.get('n'); collisionIndex++){
-            if (this.get(collisionIndex)[colIndex] === 1){
-              return true;
-            }
-          }
-        }
+        count += this.get(rowIndex)[colIndex];
+        if (count === 2) { return true; }
+        //  if (this.get(rowIndex)[colIndex] === 1){
+        //   for (var collisionIndex = rowIndex+1; collisionIndex < this.get('n'); collisionIndex++){
+        //     if (this.get(collisionIndex)[colIndex] === 1){
+        //       return true;
+        //     }
+        //   }
+        // }
       }
       return false; // fixme
     },
@@ -160,17 +166,21 @@
       } else {
         rowsToTest = this.get('n');
       }
+      var counter = 0;
       for (var rowIndex = 0; rowIndex < rowsToTest; rowIndex++) {
         if(majorDiagonalColumnIndexAtFirstRow >= 0){
-          if (this.get(rowIndex)[majorDiagonalColumnIndexAtFirstRow]){
-            for (var collisionIndex = rowIndex+1; collisionIndex < rowsToTest; collisionIndex++ ) {
-              majorDiagonalColumnIndexAtFirstRow++;
-              if (this.get(collisionIndex)[majorDiagonalColumnIndexAtFirstRow]) {
-                return true;
-              }
-            }
-            return false;
-          }
+          counter += this.get(rowIndex)[majorDiagonalColumnIndexAtFirstRow];
+          if (counter === 2) { return true; }
+          // if (this.get(rowIndex)[majorDiagonalColumnIndexAtFirstRow]){
+          
+          //   for (var collisionIndex = rowIndex+1; collisionIndex < rowsToTest; collisionIndex++ ) {
+          //     majorDiagonalColumnIndexAtFirstRow++;
+          //     if (this.get(collisionIndex)[majorDiagonalColumnIndexAtFirstRow]) {
+          //       return true;
+          //     }
+          //   }
+          //   return false;
+          // }
         }
         majorDiagonalColumnIndexAtFirstRow++;
       }
@@ -199,18 +209,20 @@
       } else {
         rowsToTest = minorDiagonalColumnIndexAtFirstRow+1;
       }
-      
+      var counter = 0;
       for (var rowIndex = 0; rowIndex < (rowsToTest); rowIndex++) {
-        if ( minorDiagonalColumnIndexAtFirstRow < this.get('n')){
-          if (this.get(rowIndex)[minorDiagonalColumnIndexAtFirstRow]){
-            for (var collisionIndex = rowIndex+1; collisionIndex < (rowsToTest); collisionIndex++ ) {
-              minorDiagonalColumnIndexAtFirstRow--;
-              if (this.get(collisionIndex)[minorDiagonalColumnIndexAtFirstRow]) {
-                return true;
-              }
-            }
-            //return false;
-          }
+        if ( minorDiagonalColumnIndexAtFirstRow < this.get('n')) {
+          counter += this.get(rowIndex)[minorDiagonalColumnIndexAtFirstRow];
+          if (counter === 2) { return true; }
+          // if (this.get(rowIndex)[minorDiagonalColumnIndexAtFirstRow]){
+          //   for (var collisionIndex = rowIndex+1; collisionIndex < (rowsToTest); collisionIndex++ ) {
+          //     minorDiagonalColumnIndexAtFirstRow--;
+          //     if (this.get(collisionIndex)[minorDiagonalColumnIndexAtFirstRow]) {
+          //       return true;
+          //     }
+          //   }
+          //   //return false;
+          // }
         }
         minorDiagonalColumnIndexAtFirstRow--;
         //this could be problematic down the road, but it should actually only do a check once
