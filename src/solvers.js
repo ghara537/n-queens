@@ -276,3 +276,76 @@ window.countNQueensSolutions = function(n) {
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
+
+
+// window.countNQueensSolutions = function(n) {
+
+
+
+//   var board = new Board({'n': n});
+
+//   var copyBoard = function (board) {
+//     var newBoard = new Board( {'n': board.get('n')} );
+//     var tempMatrix = board.rows().slice();
+//     for (var row = 0; row < tempMatrix.length; row++) {
+//       for ( var col = 0; col < tempMatrix[row].length; col++) {
+//         if (tempMatrix[row][col]) {
+//           newBoard.togglePiece(row, col);
+//         }
+//       }
+//     }
+//     return newBoard;
+//   };
+  
+//   var placeQueens = function(board, row) {
+    
+//     var sumChildren = 0;
+//     board.children = [];
+//     for (var col = 0; col < n; col++) {
+      
+//       var boardCopy = copyBoard(board);
+//       boardCopy.togglePiece(row, col);
+      
+//       if (boardCopy.hasAnyQueensConflicts()) {
+//         //Turns piece off
+//         boardCopy.togglePiece(row, col);
+
+//       } else if (row >= board.get('n') - 1) {
+//         //solution has been found
+//         console.log(console.log(JSON.stringify(boardCopy.rows())));
+//         return 1; //board.children.length;
+
+//       } else {
+//         //solution not found, recurse through next row
+//         board.children.push(boardCopy);
+      
+//         for (var i = 0; i < board.children.length; i++) {
+//           sumChildren += placeQueens(board.children[i], row + 1);
+//           // console.log('sumChildren', sumChildren);
+//         }
+//       }
+
+
+
+//     }
+//     return sumChildren;
+//   };
+  
+//   if (n === 1 || n === 0) {
+//     return 1;
+//   }
+//   if (n === 2 || n === 3) {
+//     return 0;
+//   }
+//   var solArr = []; 
+//   var numSol = 0; 
+
+//   numSol += placeQueens(new Board({'n': n}), 0);
+  
+  
+  
+//   // var solutionCount = undefined; //fixme
+
+//   console.log('Number of solutions for ' + n + ' Queens:', numSol);
+//   return numSol;
+// };
